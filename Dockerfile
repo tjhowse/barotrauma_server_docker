@@ -27,10 +27,13 @@ RUN set -x \
         && apt-get autoremove -y \
         && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
+# The git hash below is v0.9.0.4
 RUN mkdir /build ; \
     mkdir /app ; \
     cd /build ; \
     git clone https://github.com/Regalis11/Barotrauma.git ; \
+    cd ./Barotrauma ; \
+    git checkout bea7b58ff3e2c581d4589d4fbb78b1563c2913aa ; \
     mkdir -p /build/Barotrauma/Barotrauma/BarotraumaShared/Content
 
 # The game directory must be a copy of the purchased Barotrauma.
@@ -41,7 +44,8 @@ RUN cd /build/Barotrauma ; \
     msbuild Barotrauma_Solution.sln /property:Configuration=ReleaseLinux /property:Platform=x64 ; \
     mv /build/Barotrauma/Barotrauma/bin/ReleaseLinux/* /app ; \
     cd /app ; \
-    rm -rf /build  
+    rm -rf /build ; \
+    nuget locals all -clear
 
 RUN cd /home/steam/steamcmd/linux32/ ; \
     ./steamcmd ; \
