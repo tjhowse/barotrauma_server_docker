@@ -1,8 +1,8 @@
-#FROM mono:3.10-onbuild
 FROM mono:5.20.1.19
 
 ENV STEAMCMDDIR /home/steam/steamcmd
 
+# This is based on cm2network/steamcmd.
 # Install, update & upgrade packages
 # Create user for the server
 # This also creates the home directory we later need
@@ -33,6 +33,7 @@ RUN mkdir /build ; \
     git clone https://github.com/Regalis11/Barotrauma.git ; \
     mkdir -p /build/Barotrauma/Barotrauma/BarotraumaShared/Content
 
+# The game directory must be a copy of the purchased Barotrauma.
 COPY ./game/Content /build/Barotrauma/Barotrauma/BarotraumaShared/Content
 
 RUN cd /build/Barotrauma ; \
@@ -41,14 +42,7 @@ RUN cd /build/Barotrauma ; \
     mv /build/Barotrauma/Barotrauma/bin/ReleaseLinux/* /app ; \
     cd /app ; \
     rm -rf /build  
-# Switch to user steam
-#USER steam
 
-#WORKDIR $STEAMCMDDIR
-
-# VOLUME $STEAMCMDDIR
-
-#RUN cd /home/steam/steamcmd/linux32/; ./steamcmd ; mkdir -p /root/.steam/sdk64/; cp /home/steam/steamcmd/linux64/steamclient.so /root/.steam/sdk64/ ; exit 0
 RUN cd /home/steam/steamcmd/linux32/ ; \
     ./steamcmd ; \
     cp /home/steam/steamcmd/linux64/steamclient.so /lib/x86_64-linux-gnu/ ; \
