@@ -33,7 +33,7 @@ RUN mkdir /build ; \
     cd /build ; \
     git clone https://github.com/Regalis11/Barotrauma.git ; \
     cd ./Barotrauma ; \
-    git checkout bea7b58ff3e2c581d4589d4fbb78b1563c2913aa ; \
+    git checkout e79c980a5cf3f3a194a1df0d37f4875a8c866391 ; \
     mkdir -p /build/Barotrauma/Barotrauma/BarotraumaShared/Content
 
 # The game directory must be a copy of the purchased Barotrauma.
