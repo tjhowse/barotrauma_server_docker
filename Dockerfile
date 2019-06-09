@@ -51,9 +51,9 @@ RUN cd /build/Barotrauma ; \
 #RUN cd /home/steam/steamcmd/linux32/; ./steamcmd ; mkdir -p /root/.steam/sdk64/; cp /home/steam/steamcmd/linux64/steamclient.so /root/.steam/sdk64/ ; exit 0
 RUN cd /home/steam/steamcmd/linux32/ ; \
     ./steamcmd ; \
-    cp /home/steam/steamcmd/linux64/steamclient.so /app/ ; \
+    cp /home/steam/steamcmd/linux64/steamclient.so /lib/x86_64-linux-gnu/ ; \
     exit 0
 
 WORKDIR /app
 
-CMD [ "DedicatedServer" ]
+CMD [ "/app/DedicatedServer" ]
