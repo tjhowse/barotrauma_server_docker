@@ -1,6 +1,9 @@
-FROM mono:5.20.1.19
+FROM mono:5.20.1.19 AS builder
 
 ENV STEAMCMDDIR /home/steam/steamcmd
+
+# The game directory must be a copy of the purchased Barotrauma.
+COPY ./game/Content /build/Barotrauma/BarotraumaShared/Content
 
 # This is based on cm2network/steamcmd.
 # Install, update & upgrade packages
@@ -25,32 +28,22 @@ RUN set -x \
 		&& wget -qO- 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz' | tar zxf -" \
         && apt-get clean autoclean \
         && apt-get autoremove -y \
-        && rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-# The git hash below is v0.9.0.4
-RUN mkdir /build ; \
-    mkdir /app ; \
+        && rm -rf /var/lib/{apt,dpkg,cache,log}/ ; \
+    cd /home/steam/steamcmd/linux32/ ; \
+    ./steamcmd ; \
     cd /build ; \
-    git clone https://github.com/Regalis11/Barotrauma.git ; \
-    cd ./Barotrauma ; \
+    git init ; \
+    git remote add origin https://github.com/Regalis11/Barotrauma.git ; \
+    git pull ; \
     git checkout e79c980a5cf3f3a194a1df0d37f4875a8c866391 ; \
-    mkdir -p /build/Barotrauma/Barotrauma/BarotraumaShared/Content
-
-# The game directory must be a copy of the purchased Barotrauma.
-COPY ./game/Content /build/Barotrauma/Barotrauma/BarotraumaShared/Content
-
-RUN cd /build/Barotrauma ; \
     nuget restore Barotrauma_Solution.sln ; \
     msbuild Barotrauma_Solution.sln /property:Configuration=ReleaseLinux /property:Platform=x64 ; \
-    mv /build/Barotrauma/Barotrauma/bin/ReleaseLinux/* /app ; \
-    cd /app ; \
-    rm -rf /build ; \
     nuget locals all -clear
 
-RUN cd /home/steam/steamcmd/linux32/ ; \
-    ./steamcmd ; \
-    cp /home/steam/steamcmd/linux64/steamclient.so /lib/x86_64-linux-gnu/ ; \
-    exit 0
+FROM mono:5.20.1.19-slim as runner
+
+COPY --from=builder /build/Barotrauma/bin/ReleaseLinux /app
+COPY --from=builder /home/steam/steamcmd/linux64/steamclient.so /lib/x86_64-linux-gnu/
 
 WORKDIR /app
 
