@@ -4,7 +4,8 @@
 # serversettings.xml: Obvious
 # clientpermissions.xml: Stores permissions you've granted to players
 # bannedplayers.txt: Obvious
-# ServerLogs: Obvious, though the dedicated server doesn't current log to a file...
+# ServerLogs: Obvious, though the dedicated server doesn't create a log
+#             file until the round ends.
 
 docker run --rm -it \
   -v ${PWD}/serversettings.xml:/app/serversettings.xml \
