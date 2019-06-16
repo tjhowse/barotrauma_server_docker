@@ -33,9 +33,9 @@ RUN set -x \
     ./steamcmd ; \
     cd /build ; \
     git init ; \
-    git remote add origin https://github.com/Regalis11/Barotrauma.git ; \
+    git remote add origin https://github.com/tjhowse/Barotrauma.git ; \
     git pull ; \
-    git checkout e79c980a5cf3f3a194a1df0d37f4875a8c866391 ; \
+    git checkout 2f2c97e013d098252806464532972320e92a3a83; \
     nuget restore Barotrauma_Solution.sln ; \
     msbuild Barotrauma_Solution.sln /property:Configuration=ReleaseLinux /property:Platform=x64 ; \
     nuget locals all -clear
